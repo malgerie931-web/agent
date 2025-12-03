@@ -144,7 +144,7 @@
     {
       "parameters": {
         "mode": "retrieve-as-tool",
-        "toolDescription": "when chat message received",
+        "toolDescription": "Search the knowledge base for travel packages, prices, policies, and activities.",
         "memoryKey": {
           "__rl": true,
           "value": "vector_store_key",
@@ -159,7 +159,7 @@
         -272
       ],
       "id": "1db8bc59-0734-4c28-a1f9-6635c0136522",
-      "name": "Simple Vector Store1"
+      "name": "knowledge_search"
     },
     {
       "parameters": {},
@@ -280,7 +280,7 @@
         -352
       ],
       "id": "3e945ddb-5984-409d-8948-3244443e6988",
-      "name": "Append row in sheet in Google Sheets",
+      "name": "save_booking_request",
       "credentials": {
         "googleSheetsOAuth2Api": {
           "id": "lMZSgSaBfVYRY438",
@@ -358,7 +358,7 @@
     {
       "parameters": {
         "sessionIdType": "customKey",
-        "sessionKey": "={{ $json.metadata.phone_number_id }}"
+        "sessionKey": "={{ $json.messages[0].from }}"
       },
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
@@ -368,6 +368,35 @@
       ],
       "id": "5fa4edb5-fa84-4a7e-9fa2-798310ab9f2f",
       "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "calendar": {
+          "__rl": true,
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('calendar', 'primary', 'string') }}",
+          "mode": "list",
+          "cachedResultName": "primary"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('start', '', 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('end', '', 'string') }}",
+        "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('summary', '', 'string') }}",
+        "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('description', '', 'string') }}"
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        360,
+        -160
+      ],
+      "id": "88701953-53c8-4770-9856-78a0d9637840",
+      "name": "create_calendar_event",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "google_calendar_creds_placeholder",
+          "name": "Google Calendar account"
+        }
+      }
     }
   ],
   "pinData": {},
@@ -427,7 +456,7 @@
         ]
       ]
     },
-    "Simple Vector Store1": {
+    "knowledge_search": {
       "ai_tool": [
         [
           {
@@ -442,14 +471,14 @@
       "ai_embedding": [
         [
           {
-            "node": "Simple Vector Store1",
+            "node": "knowledge_search",
             "type": "ai_embedding",
             "index": 0
           }
         ]
       ]
     },
-    "Append row in sheet in Google Sheets": {
+    "save_booking_request": {
       "ai_tool": [
         [
           {
@@ -499,6 +528,17 @@
           {
             "node": "AI Agent",
             "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "create_calendar_event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
             "index": 0
           }
         ]
